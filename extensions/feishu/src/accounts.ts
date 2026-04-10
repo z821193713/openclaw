@@ -279,6 +279,7 @@ function buildResolvedFeishuAccount(params: {
     encryptKey: eventSecrets.encryptKey,
     verificationToken: eventSecrets.verificationToken,
     domain: baseCreds?.domain ?? "feishu",
+    webDomain: merged.webDomain ?? undefined,
     config: merged,
   };
 }

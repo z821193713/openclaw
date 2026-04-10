@@ -908,7 +908,12 @@ async function createDoc(
   client: Lark.Client,
   title: string,
   folderToken?: string,
-  options?: { grantToRequester?: boolean; requesterOpenId?: string },
+  options?: {
+    grantToRequester?: boolean;
+    requesterOpenId?: string;
+    domain?: string;
+    webDomain?: string;
+  },
 ) {
   const res = await client.docx.document.create({
     data: { title, folder_token: folderToken },
@@ -950,10 +955,34 @@ async function createDoc(
     }
   }
 
+  // Build the user-facing document URL from the configured domain.
+  // The API base uses open.<host>/open-apis/... but the user-facing URL is <host>/docx/...
+  // For standard Feishu/Lark, use the known public URLs.
+  let docUrl: string;
+  const domain = options?.domain;
+  const webDomain = options?.webDomain?.replace(/\/+$/, "");
+  if (webDomain) {
+    docUrl = `${webDomain}/docx/${docToken}`;
+  } else if (!domain || domain === "feishu") {
+    docUrl = `https://feishu.cn/docx/${docToken}`;
+  } else if (domain === "lark") {
+    docUrl = `https://larksuite.com/docx/${docToken}`;
+  } else {
+    // Private deployment: domain is like "https://open.fklzl.cnpc.com.cn"
+    // Strip the "open." subdomain to get the user-facing host.
+    try {
+      const url = new URL(domain);
+      const host = url.host.replace(/^open\./, "");
+      docUrl = `https://${host}/docx/${docToken}`;
+    } catch {
+      docUrl = `${domain.replace(/\/+$/, "")}/docx/${docToken}`;
+    }
+  }
+
   return {
     document_id: docToken,
     title: doc?.title,
-    url: `https://open.fklzl.cnpc.com.cn/docx/${docToken}`,
+    url: docUrl,
     ...(shouldGrantToRequester && {
       requester_permission_added: requesterPermissionAdded,
       ...(requesterOpenId && { requester_open_id: requesterOpenId }),
@@ -1474,6 +1503,13 @@ export function registerFeishuDocTools(api: OpenClawPluginApi) {
                     await createDoc(client, p.title, p.folder_token, {
                       grantToRequester: p.grant_to_requester,
                       requesterOpenId: trustedRequesterOpenId,
+                      domain: resolveFeishuToolAccount({ api, executeParams: p, defaultAccountId })
+                        .domain,
+                      webDomain: resolveFeishuToolAccount({
+                        api,
+                        executeParams: p,
+                        defaultAccountId,
+                      }).webDomain,
                     }),
                   );
                 case "list_blocks":

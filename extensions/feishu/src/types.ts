@@ -31,6 +31,8 @@ export type ResolvedFeishuAccount = {
   encryptKey?: string;
   verificationToken?: string;
   domain: FeishuDomain;
+  /** User-facing web portal domain for private deployments. */
+  webDomain?: string;
   /** Merged config (top-level defaults + account-specific overrides) */
   config: FeishuConfig;
 };

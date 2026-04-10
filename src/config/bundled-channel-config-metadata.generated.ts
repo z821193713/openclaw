@@ -3369,6 +3369,13 @@ export const GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA = [
           default: "/feishu/events",
           type: "string",
         },
+        webDomain: {
+          description:
+            "User-facing web portal domain for private deployments (e.g. https://nipj5983sr.fklzl.cnpc.com.cn). Used to generate document/bitable URLs shown to users. Defaults to the API domain.",
+          type: "string",
+          format: "uri",
+          pattern: "^https:\\/\\/.*",
+        },
         webhookHost: {
           type: "string",
         },
@@ -3926,6 +3933,13 @@ export const GENERATED_BUNDLED_CHANNEL_CONFIG_METADATA = [
               },
               webhookPath: {
                 type: "string",
+              },
+              webDomain: {
+                description:
+                  "User-facing web portal domain for private deployments (e.g. https://nipj5983sr.fklzl.cnpc.com.cn). Used to generate document/bitable URLs shown to users. Defaults to the API domain.",
+                type: "string",
+                format: "uri",
+                pattern: "^https:\\/\\/.*",
               },
               webhookHost: {
                 type: "string",

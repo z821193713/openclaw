@@ -308,9 +308,8 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
     }
     await partialUpdateQueue;
     if (streaming?.isActive()) {
-      // Use blockStreamText (accumulated multi-reply content) when available,
-      // otherwise fall back to streamText (partial streaming content).
-      const baseText = blockStreamText || streamText;
+      // Use streamText (final replies only) when available, otherwise blockStreamText.
+      const baseText = streamText || blockStreamText;
       let text = buildCombinedStreamText(reasoningText, baseText);
       if (mentionTargets?.length) {
         text = buildMentionedCardContent(mentionTargets, text);
@@ -428,16 +427,23 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
 
           if (streaming?.isActive()) {
             if (info?.kind === "block") {
-              // Append block text to the persistent card; keep session open.
+              // Show block text as interim content; will be replaced by final reply.
               blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
               queueStreamingUpdate(blockStreamText, { mode: "snapshot" });
             }
             if (info?.kind === "final") {
-              // Append final text to the persistent card; keep session open
-              // so subsequent tool-call replies in the same turn reuse it.
-              // The card is closed in onIdle once all replies are done.
+              // Final reply replaces all block content — do not append to blockStreamText.
+              // Accumulate only final replies together.
               blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
-              queueStreamingUpdate(blockStreamText, { mode: "snapshot" });
+              // If there were block replies before, replace them entirely with final content.
+              // We detect this by checking if streamText (set only on final) is empty.
+              if (!streamText) {
+                // First final reply: replace any block content with just this final text.
+                queueStreamingUpdate(text, { mode: "snapshot" });
+              } else {
+                queueStreamingUpdate(blockStreamText, { mode: "snapshot" });
+              }
+              streamText = blockStreamText;
               deliveredFinalTexts.add(text);
             }
             // Send media even when streaming handled the text

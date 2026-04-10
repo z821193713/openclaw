@@ -199,6 +199,14 @@ export const FeishuAccountConfigSchema = z
     domain: FeishuDomainSchema.optional(),
     connectionMode: FeishuConnectionModeSchema.optional(),
     webhookPath: z.string().optional(),
+    webDomain: z
+      .string()
+      .url()
+      .startsWith("https://")
+      .optional()
+      .describe(
+        "User-facing web portal domain for private deployments (e.g. https://nipj5983sr.fklzl.cnpc.com.cn). Used to generate document/bitable URLs shown to users. Defaults to the API domain.",
+      ),
     ...FeishuSharedConfigShape,
     groupSessionScope: GroupSessionScopeSchema,
     topicSessionMode: TopicSessionModeSchema,
@@ -217,6 +225,14 @@ export const FeishuConfigSchema = z
     domain: FeishuDomainSchema.optional().default("feishu"),
     connectionMode: FeishuConnectionModeSchema.optional().default("websocket"),
     webhookPath: z.string().optional().default("/feishu/events"),
+    webDomain: z
+      .string()
+      .url()
+      .startsWith("https://")
+      .optional()
+      .describe(
+        "User-facing web portal domain for private deployments (e.g. https://nipj5983sr.fklzl.cnpc.com.cn). Used to generate document/bitable URLs shown to users. Defaults to the API domain.",
+      ),
     ...FeishuSharedConfigShape,
     dmPolicy: DmPolicySchema.optional().default("pairing"),
     reactionNotifications: ReactionNotificationModeSchema.optional().default("own"),
