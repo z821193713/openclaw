@@ -308,7 +308,10 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
     }
     await partialUpdateQueue;
     if (streaming?.isActive()) {
-      let text = buildCombinedStreamText(reasoningText, streamText);
+      // Use blockStreamText (accumulated multi-reply content) when available,
+      // otherwise fall back to streamText (partial streaming content).
+      const baseText = blockStreamText || streamText;
+      let text = buildCombinedStreamText(reasoningText, baseText);
       if (mentionTargets?.length) {
         text = buildMentionedCardContent(mentionTargets, text);
       }
@@ -414,8 +417,10 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
             }
           }
 
+          // For final replies, do not start a new streaming session here —
+          // onReplyStart already opened one. Starting again would create a
+          // second card when the first is still open or was just closed.
           if (info?.kind === "final" && streamingEnabled && useCard) {
-            startStreaming();
             if (streamingStartPromise) {
               await streamingStartPromise;
             }
@@ -425,16 +430,14 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
             if (info?.kind === "block") {
               // Append block text to the persistent card; keep session open.
               blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
-              streamText = blockStreamText;
-              queueStreamingUpdate(streamText, { mode: "snapshot" });
+              queueStreamingUpdate(blockStreamText, { mode: "snapshot" });
             }
             if (info?.kind === "final") {
               // Append final text to the persistent card; keep session open
               // so subsequent tool-call replies in the same turn reuse it.
               // The card is closed in onIdle once all replies are done.
               blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
-              streamText = mergeStreamingText(streamText, blockStreamText);
-              queueStreamingUpdate(streamText, { mode: "snapshot" });
+              queueStreamingUpdate(blockStreamText, { mode: "snapshot" });
               deliveredFinalTexts.add(text);
             }
             // Send media even when streaming handled the text
