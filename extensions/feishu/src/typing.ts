@@ -4,7 +4,7 @@ import { createFeishuClient } from "./client.js";
 import { getFeishuRuntime } from "./runtime.js";
 
 // Feishu emoji types for typing indicator
-// See: https://open.feishu.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
+// See: https://open.fklzl.cnpc.com.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
 // Full list: https://github.com/go-lark/lark/blob/main/emoji.go
 const TYPING_EMOJI = "Typing"; // Typing indicator emoji
 
@@ -17,7 +17,7 @@ const TYPING_EMOJI = "Typing"; // Typing indicator emoji
  * - 99991403: Monthly API call quota exceeded
  * - 429: Standard HTTP 429 returned as a Feishu SDK error code
  *
- * @see https://open.feishu.cn/document/server-docs/api-call-guide/generic-error-code
+ * @see https://open.fklzl.cnpc.com.cn/document/server-docs/api-call-guide/generic-error-code
  */
 const FEISHU_BACKOFF_CODES = new Set([99991400, 99991403, 429]);
 

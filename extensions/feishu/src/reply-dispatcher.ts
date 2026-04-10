@@ -57,19 +57,11 @@ function resolveCardHeader(
 
 /** Build a card note footer from agent identity and model context. */
 function resolveCardNote(
-  agentId: string,
-  identity: OutboundIdentity | undefined,
-  prefixCtx: { model?: string; provider?: string },
+  _agentId: string,
+  _identity: OutboundIdentity | undefined,
+  _prefixCtx: { model?: string; provider?: string },
 ): string {
-  const name = identity?.name?.trim() || agentId;
-  const parts: string[] = [`Agent: ${name}`];
-  if (prefixCtx.model) {
-    parts.push(`Model: ${prefixCtx.model}`);
-  }
-  if (prefixCtx.provider) {
-    parts.push(`Provider: ${prefixCtx.provider}`);
-  }
-  return parts.join(" | ");
+  return "";
 }
 
 export type CreateFeishuReplyDispatcherParams = {
@@ -367,7 +359,10 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
       humanDelay: core.channel.reply.resolveHumanDelayConfig(cfg, agentId),
       onReplyStart: async () => {
         deliveredFinalTexts.clear();
-        if (streamingEnabled && renderMode === "card") {
+        // Start streaming eagerly for card and auto modes so partial updates
+        // from onPartialReply are not discarded before the session is open.
+        // (streamingEnabled already excludes renderMode === "raw")
+        if (streamingEnabled) {
           startStreaming();
         }
         await typingCallbacks?.onReplyStart?.();
@@ -497,6 +492,7 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
             if (!payload.text) {
               return;
             }
+            // params.runtime.log?.(`feishu[${accountId}] onPartialReply: len=${payload.text.length}`);
             queueStreamingUpdate(payload.text, {
               dedupeWithLastPartial: true,
               mode: "snapshot",

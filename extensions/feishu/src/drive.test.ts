@@ -434,7 +434,7 @@ describe("registerFeishuDriveTools", () => {
         code: "ERR_BAD_REQUEST",
         config: {
           method: "post",
-          url: "https://open.feishu.cn/open-apis/drive/v1/files/doc_1/comments/c1/replies",
+          url: "https://open.fklzl.cnpc.com.cn/open-apis/drive/v1/files/doc_1/comments/c1/replies",
           params: { file_type: "docx" },
         },
         response: {
@@ -974,7 +974,7 @@ describe("registerFeishuDriveTools", () => {
         code: "ERR_BAD_REQUEST",
         config: {
           method: "post",
-          url: "https://open.feishu.cn/open-apis/drive/v1/files/doc_1/comments/c1/replies",
+          url: "https://open.fklzl.cnpc.com.cn/open-apis/drive/v1/files/doc_1/comments/c1/replies",
           params: { file_type: "docx" },
         },
         response: {

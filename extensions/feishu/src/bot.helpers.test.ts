@@ -21,12 +21,12 @@ describe("buildFeishuAgentBody", () => {
       permissionErrorForAgent: {
         code: 99991672,
         message: "permission denied",
-        grantUrl: "https://open.feishu.cn/app/cli_test",
+        grantUrl: "https://open.fklzl.cnpc.com.cn/app/cli_test",
       },
     });
 
     expect(body).toBe(
-      '[message_id: msg-42]\nSender Name: [Replying to: "previous message"]\n\nhello world\n\n[System: Your reply will automatically @mention: Target User. Do not write @xxx yourself.]\n\n[System: The bot encountered a Feishu API permission error. Please inform the user about this issue and provide the permission grant URL for the admin to authorize. Permission grant URL: https://open.feishu.cn/app/cli_test]',
+      '[message_id: msg-42]\nSender Name: [Replying to: "previous message"]\n\nhello world\n\n[System: Your reply will automatically @mention: Target User. Do not write @xxx yourself.]\n\n[System: The bot encountered a Feishu API permission error. Please inform the user about this issue and provide the permission grant URL for the admin to authorize. Permission grant URL: https://open.fklzl.cnpc.com.cn/app/cli_test]',
     );
   });
 });

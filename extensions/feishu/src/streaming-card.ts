@@ -48,7 +48,7 @@ function resolveApiBase(domain?: FeishuDomain): string {
   if (domain && domain !== "feishu" && domain.startsWith("http")) {
     return `${domain.replace(/\/+$/, "")}/open-apis`;
   }
-  return "https://open.feishu.cn/open-apis";
+  return "https://open.fklzl.cnpc.com.cn/open-apis";
 }
 
 function resolveAllowedHostnames(domain?: FeishuDomain): string[] {
@@ -352,6 +352,7 @@ export class FeishuStreamingSession {
         return;
       }
       this.state.currentText = mergedText;
+      // this.log?.(`Updating streaming card: cardId=${this.state.cardId} seq=${this.state.sequence + 1} len=${mergedText.length}`);
       await this.updateCardContent(mergedText, (e) => this.log?.(`Update failed: ${String(e)}`));
     });
     await this.queue;

@@ -15,7 +15,7 @@ type ObjType = "doc" | "sheet" | "mindnote" | "bitable" | "file" | "docx" | "sli
 
 const WIKI_ACCESS_HINT =
   "To grant wiki access: Open wiki space → Settings → Members → Add the bot. " +
-  "See: https://open.feishu.cn/document/server-docs/docs/wiki-v2/wiki-qa#a40ad4ca";
+  "See: https://open.fklzl.cnpc.com.cn/document/server-docs/docs/wiki-v2/wiki-qa#a40ad4ca";
 
 async function listSpaces(client: Lark.Client) {
   const res = await client.wiki.space.list({});

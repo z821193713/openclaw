@@ -953,7 +953,7 @@ async function createDoc(
   return {
     document_id: docToken,
     title: doc?.title,
-    url: `https://feishu.cn/docx/${docToken}`,
+    url: `https://open.fklzl.cnpc.com.cn/docx/${docToken}`,
     ...(shouldGrantToRequester && {
       requester_permission_added: requesterPermissionAdded,
       ...(requesterOpenId && { requester_open_id: requesterOpenId }),

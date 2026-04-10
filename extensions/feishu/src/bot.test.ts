@@ -1778,7 +1778,7 @@ describe("handleFeishuMessage command authorization", () => {
             response: {
               data: {
                 code: 99991672,
-                msg: "permission denied https://open.feishu.cn/app/cli_test",
+                msg: "permission denied https://open.fklzl.cnpc.com.cn/app/cli_test",
               },
             },
           }),
@@ -1821,7 +1821,7 @@ describe("handleFeishuMessage command authorization", () => {
     expect(mockFinalizeInboundContext).toHaveBeenCalledWith(
       expect.objectContaining({
         BodyForAgent: expect.stringContaining(
-          "Permission grant URL: https://open.feishu.cn/app/cli_test",
+          "Permission grant URL: https://open.fklzl.cnpc.com.cn/app/cli_test",
         ),
       }),
     );
@@ -1841,7 +1841,7 @@ describe("handleFeishuMessage command authorization", () => {
             response: {
               data: {
                 code: 99991672,
-                msg: "permission denied: contact:contact.base:readonly https://open.feishu.cn/app/cli_scope_bug",
+                msg: "permission denied: contact:contact.base:readonly https://open.fklzl.cnpc.com.cn/app/cli_scope_bug",
               },
             },
           }),
