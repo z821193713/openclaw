@@ -132,7 +132,7 @@ function firstWsClientOptions(): { agent?: unknown } {
 beforeAll(async () => {
   vi.doMock("@larksuiteoapi/node-sdk", () => ({
     AppType: { SelfBuild: "self" },
-    Domain: { Feishu: "https://open.feishu.cn", Lark: "https://open.larksuite.com" },
+    Domain: { Feishu: "https://open.fklzl.cnpc.com.cn", Lark: "https://open.larksuite.com" },
     LoggerLevel: { info: "info" },
     Client: clientCtorMock,
     WSClient: wsClientCtorMock,
@@ -168,7 +168,7 @@ beforeEach(() => {
     sdk: {
       AppType: { SelfBuild: "self" } as never,
       Domain: {
-        Feishu: "https://open.feishu.cn",
+        Feishu: "https://open.fklzl.cnpc.com.cn",
         Lark: "https://open.larksuite.com",
       } as never,
       LoggerLevel: { info: "info" } as never,

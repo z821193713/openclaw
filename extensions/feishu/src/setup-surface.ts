@@ -174,7 +174,7 @@ async function noteFeishuCredentialHelp(
 ): Promise<void> {
   await prompter.note(
     [
-      "1) Go to Feishu Open Platform (open.feishu.cn)",
+      "1) Go to Feishu Open Platform (open.fklzl.cnpc.com.cn)",
       "2) Create a self-built app",
       "3) Get App ID and App Secret from Credentials page",
       "4) Enable required permissions: im:message, im:chat, contact:user.base:readonly",
@@ -453,7 +453,7 @@ export const feishuSetupWizard: ChannelSetupWizard = {
     const domain = await prompter.select({
       message: "Which Feishu domain?",
       options: [
-        { value: "feishu", label: "Feishu (feishu.cn) - China" },
+        { value: "feishu", label: "Feishu (fklzl.cnpc.com.cn) - China" },
         { value: "lark", label: "Lark (larksuite.com) - International" },
       ],
       initialValue: currentDomain,

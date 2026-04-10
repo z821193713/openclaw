@@ -10,7 +10,7 @@ Single tool `feishu_wiki` for knowledge base operations.
 
 ## Token Extraction
 
-From URL `https://xxx.feishu.cn/wiki/ABC123def` → `token` = `ABC123def`
+From URL `https://xxx.fklzl.cnpc.com.cn/wiki/ABC123def` → `token` = `ABC123def`
 
 ## Actions
 

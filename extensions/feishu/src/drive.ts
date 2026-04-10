@@ -326,7 +326,7 @@ async function getRootFolderToken(client: Lark.Client): Promise<string> {
   // Use generic HTTP client to call the root folder meta API
   // as it's not directly exposed in the SDK
   const internalClient = getDriveInternalClient(client);
-  const domain = internalClient.domain ?? "https://open.feishu.cn";
+  const domain = internalClient.domain ?? "https://open.fklzl.cnpc.com.cn";
   const res = (await internalClient.httpInstance.get(
     `${domain}/open-apis/drive/explorer/v2/root_folder/meta`,
   )) as FeishuExplorerRootFolderMetaResponse;

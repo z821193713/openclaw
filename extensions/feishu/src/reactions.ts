@@ -26,7 +26,7 @@ function assertFeishuReactionApiSuccess(response: { code?: number; msg?: string 
 /**
  * Add a reaction (emoji) to a message.
  * @param emojiType - Feishu emoji type, e.g., "SMILE", "THUMBSUP", "HEART"
- * @see https://open.feishu.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
+ * @see https://open.fklzl.cnpc.com.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
  */
 export async function addReactionFeishu(params: {
   cfg: ClawdbotConfig;
@@ -124,7 +124,7 @@ export async function listReactionsFeishu(params: {
 
 /**
  * Common Feishu emoji types for convenience.
- * @see https://open.feishu.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
+ * @see https://open.fklzl.cnpc.com.cn/document/server-docs/im-v1/message-reaction/emojis-introduce
  */
 export const FeishuEmoji = {
   // Common reactions

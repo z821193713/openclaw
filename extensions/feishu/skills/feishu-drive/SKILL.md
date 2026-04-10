@@ -10,7 +10,7 @@ Single tool `feishu_drive` for cloud storage operations.
 
 ## Token Extraction
 
-From URL `https://xxx.feishu.cn/drive/folder/ABC123` → `folder_token` = `ABC123`
+From URL `https://xxx.fklzl.cnpc.com.cn/drive/folder/ABC123` → `folder_token` = `ABC123`
 
 ## Actions
 

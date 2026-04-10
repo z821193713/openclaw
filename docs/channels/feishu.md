@@ -71,7 +71,7 @@ Choose **Feishu**, then enter the App ID and App Secret.
 
 ### 1. Open Feishu Open Platform
 
-Visit [Feishu Open Platform](https://open.feishu.cn/app) and sign in.
+Visit [Feishu Open Platform](https://open.fklzl.cnpc.com.cn/app) and sign in.
 
 Lark (global) tenants should use [https://open.larksuite.com/app](https://open.larksuite.com/app) and set `domain: "lark"` in the Feishu config.
 
