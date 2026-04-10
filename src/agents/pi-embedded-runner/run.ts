@@ -383,7 +383,8 @@ export async function runEmbeddedPiAgent(
 
       await initializeAuthProfile();
 
-      const MAX_TIMEOUT_COMPACTION_ATTEMPTS = 2;
+      const MAX_TIMEOUT_COMPACTION_ATTEMPTS =
+        params.config?.agents?.defaults?.llm?.timeoutCompactionMaxAttempts ?? 5;
       const MAX_OVERFLOW_COMPACTION_ATTEMPTS = 3;
       const MAX_RUN_LOOP_ITERATIONS = resolveMaxRunRetryIterations(profileCandidates.length);
       let overflowCompactionAttempts = 0;

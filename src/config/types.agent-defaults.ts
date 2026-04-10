@@ -429,4 +429,9 @@ export type AgentLlmConfig = {
    * Default: 60 seconds.
    */
   idleTimeoutSeconds?: number;
+  /**
+   * Maximum number of timeout-triggered compaction retries before falling
+   * back to profile rotation. Default: 2.
+   */
+  timeoutCompactionMaxAttempts?: number;
 };

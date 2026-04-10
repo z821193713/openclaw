@@ -103,6 +103,15 @@ export const AgentDefaultsSchema = z
           .describe(
             "Idle timeout for LLM streaming responses in seconds. If no token is received within this time, the request is aborted. Set to 0 to disable. Default: 60 seconds.",
           ),
+        timeoutCompactionMaxAttempts: z
+          .number()
+          .int()
+          .min(1)
+          .max(10)
+          .optional()
+          .describe(
+            "Maximum number of timeout-triggered compaction retries before falling back to profile rotation. Default: 2.",
+          ),
       })
       .strict()
       .optional(),
