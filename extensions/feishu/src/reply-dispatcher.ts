@@ -198,6 +198,9 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
   const deliveredFinalTexts = new Set<string>();
   let partialUpdateQueue: Promise<void> = Promise.resolve();
   let streamingStartPromise: Promise<void> | null = null;
+  // Track whether we are inside a multi-block agent turn so block replies
+  // append to the same card instead of opening a new one each time.
+  let blockStreamText = "";
   type StreamTextUpdateMode = "snapshot" | "delta";
 
   const formatReasoningPrefix = (thinking: string): string => {
@@ -299,7 +302,7 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
     })();
   };
 
-  const closeStreaming = async () => {
+  const closeStreaming = async (isFinal = true) => {
     if (streamingStartPromise) {
       await streamingStartPromise;
     }
@@ -309,11 +312,19 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
       if (mentionTargets?.length) {
         text = buildMentionedCardContent(mentionTargets, text);
       }
-      const finalNote = resolveCardNote(agentId, identity, prefixContext.prefixContext);
-      await streaming.close(text, { note: finalNote });
+      if (isFinal) {
+        const finalNote = resolveCardNote(agentId, identity, prefixContext.prefixContext);
+        await streaming.close(text, { note: finalNote });
+      } else {
+        // Block reply: update card content but keep session open for next block.
+        await streaming.update(text);
+      }
     }
-    streaming = null;
-    streamingStartPromise = null;
+    if (isFinal) {
+      streaming = null;
+      streamingStartPromise = null;
+      blockStreamText = "";
+    }
     streamText = "";
     lastPartial = "";
     reasoningText = "";
@@ -367,7 +378,10 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
       humanDelay: core.channel.reply.resolveHumanDelayConfig(cfg, agentId),
       onReplyStart: async () => {
         deliveredFinalTexts.clear();
-        if (streamingEnabled && renderMode === "card") {
+        // Start streaming eagerly for card and auto modes so partial updates
+        // from onPartialReply are not discarded before the session is open.
+        // Skip if a card session is already open (multi-block turn reuse).
+        if (streamingEnabled && !streaming && !streamingStartPromise) {
           startStreaming();
         }
         await typingCallbacks?.onReplyStart?.();
@@ -409,13 +423,18 @@ export function createFeishuReplyDispatcher(params: CreateFeishuReplyDispatcherP
 
           if (streaming?.isActive()) {
             if (info?.kind === "block") {
-              // Some runtimes emit block payloads without onPartial/final callbacks.
-              // Mirror block text into streamText so onIdle close still sends content.
-              queueStreamingUpdate(text, { mode: "delta" });
+              // Append block text to the persistent card; keep session open.
+              blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
+              streamText = blockStreamText;
+              queueStreamingUpdate(streamText, { mode: "snapshot" });
             }
             if (info?.kind === "final") {
-              streamText = mergeStreamingText(streamText, text);
-              await closeStreaming();
+              // Append final text to the persistent card; keep session open
+              // so subsequent tool-call replies in the same turn reuse it.
+              // The card is closed in onIdle once all replies are done.
+              blockStreamText = blockStreamText ? `${blockStreamText}\n\n${text}` : text;
+              streamText = mergeStreamingText(streamText, blockStreamText);
+              queueStreamingUpdate(streamText, { mode: "snapshot" });
               deliveredFinalTexts.add(text);
             }
             // Send media even when streaming handled the text
